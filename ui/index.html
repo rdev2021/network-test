@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Connectivity Check</title>
+    <link rel="stylesheet" type="text/css"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="app.css">
+</head>
+
+<body>
+    <div class="header">
+        <h1>Network Connectivity Check</h1>
+    </div>
+
+    <div class="container">
+        <div class="tile-container">
+            <div class="tile" onclick="openPortCheck()">
+                <h3>Port</h3>
+                <p>Click to check if TCP port is open on a host.</p>
+            </div>
+            <div class="tile" onclick="openHttpModal()">
+                <h3>HTTP</h3>
+                <p>Check if a URL returns a success response.</p>
+            </div>
+            <div class="tile" onclick="resolveDomain()">
+                <h3>Domain</h3>
+                <p>Resolve domain name to A, CNAME and MX Records</p>
+            </div>
+            <div class="tile" onclick="showCheckDBModal()">
+                <h3>DB</h3>
+                <p>Check if DB connects and functioning</p>
+            </div>
+        </div>
+        <!-- Port Check Modal -->
+        <div class="modal fade" tabindex="-1" role="dialog" id="portCheckModal" data-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Check Port</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="portCheckForm">
+                            <div class="form-group">
+                                <label for="hostname">Hostname:</label>
+                                <input type="text" class="form-control" id="hostname" name="hostname" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="port">Port:</label>
+                                <input type="number" class="form-control" id="port" name="port" required>
+                            </div>
+                        </form>
+                        <!-- Outcome message container -->
+                        <div id="outcomeContainer"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="submitForm()">Submit</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Domain Resolution Modal -->
+        <div class="modal fade" tabindex="-1" role="dialog" id="domainCheckModal" data-backdrop="static">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Domain Resolution</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Domain Resolution Form -->
+                        <form id="domainCheckForm">
+                            <div class="form-group">
+                                <label for="domainName">Domain Name:</label>
+                                <input type="text" class="form-control" id="domainName" required>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="toggleDnsInput">
+                                <label class="form-check-label" for="toggleDnsInput">Use custom DNS server</label>
+                            </div>
+                            <div class="form-group" id="dnsInput" style="display: none;">
+                                <label for="dnsServer">DNS Server IP:</label>
+                                <input type="text" class="form-control" id="dnsServer">
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-primary  mr-2"
+                                    onclick="submitDomainCheck()">Submit</button>
+                                <button type="button" class="btn btn-secondary"
+                                    onclick="closeDomainModal()">Close</button>
+                            </div>
+                        </form>
+
+                        <!-- Domain Resolution Result -->
+                        <div id="domainResult"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HTTP Check Modal -->
+        <div class="modal fade" tabindex="-1" role="dialog" id="httpCheckModal" data-backdrop="static">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">HTTP Check</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- HTTP Check Form -->
+                        <form id="httpCheckForm">
+                            <div class="form-group">
+                                <label for="url">URL:</label>
+                                <input type="text" class="form-control" id="url" required>
+                            </div>
+                            <div class="d-flex justify-content-end mb-3">
+                                <button type="button" class="btn btn-primary mr-2"
+                                    onclick="submitHttpCheck()">Submit</button>
+                                <button type="button" class="btn btn-secondary"
+                                    onclick="closeHttpModal()">Close</button>
+                            </div>
+                        </form>
+
+                        <!-- HTTP Check Result -->
+                        <div id="httpResult"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DB Connection Check Model -->
+        <!-- Modal -->
+        <div class="modal fade" tabindex="-1" role="dialog" id="dbCheckModal" data-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Check DB Connection</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="dbCheckForm">
+                            <div class="form-group">
+                                <label for="dbType">Database Type:</label>
+                                <select class="form-control" id="dbType" name="dbType" onchange="changeDbType()">
+                                    <option value="mysql">MySQL</option>
+                                    <option value="mssql">MSSQL</option>
+                                    <!-- <option value="oracle">Oracle</option>  NOT TESTED HENCE COMMENTING   -->
+                                    <option value="postgres">PostgreSQL</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="hostname">Hostname:</label>
+                                <input type="text" name="hostname" class="form-control" id="hostname"
+                                    placeholder="Database hostname or IP" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="port">Port:</label>
+                                <input type="number" name="port" class="form-control" id="port"
+                                    placeholder="Database port number" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="username">Username:</label>
+                                <input type="text" name="username" class="form-control" id="username" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password:</label>
+                                <input type="password" name="password" class="form-control" id="password" required>
+                            </div>
+                            <div class="form-group" id="serviceNameDiv" style="display: none;">
+                                <label for="serviceName">Service Name:</label>
+                                <input type="text" class="form-control" id="serviceName"
+                                    placeholder="Enter service name">
+                            </div>
+                            <div class="form-group" id="dataBaseDiv" style="display: none;">
+                                <label for="databaseName">Database Name:</label>
+                                <input type="text" class="form-control" id="databaseName"
+                                    placeholder="Enter database name">
+                            </div>
+
+                        </form>
+                        <!-- Outcome message container -->
+                        <div id="dbCheckResult"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="submitDBForm()">Submit</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeDBModal()">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2024 Network Connectivity Check</p>
+        </div>
+
+        <!-- Bootstrap JavaScript libraries -->
+        <script src="app.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,55 @@
+.header {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+.footer {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+}
+
+.tile-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.tile {
+    flex: 0 0 30%;
+    /* Equal width for all tiles */
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    cursor: pointer;
+    transition: box-shadow 0.3s;
+}
+
+.tile:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.output {
+    margin-top: 20px;
+}
+
+.ribbon {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    padding: 5px 10px;
+    color: white;
+    font-weight: bold;
+    border-radius: 3px;
+}
