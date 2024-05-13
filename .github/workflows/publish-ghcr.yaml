@@ -8,6 +8,6 @@ jobs:
          - uses: actions/checkout@v3
          - name: Build & Push image
            run: |
-              docker login --username rdev2021 --password ${{ secrets.GH_PATH }} ghcr.io
+              docker login --username rdev2021 --password ${{ secrets.GH_PAT }} ghcr.io
               docker build . --tag ghcr.io/rdev2021/network-test:latest
               docker push ghcr.io/rdev2021/network-test:latest
