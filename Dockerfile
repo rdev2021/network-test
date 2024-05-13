@@ -7,7 +7,7 @@ COPY pkg/ ./pkg/
 COPY ui/ ./ui/
 RUN go build -o /network-test
 
-FROM gcr.io/distroless/base-debian11:nonroot-arm64 AS build-release-stage
+FROM gcr.io/distroless/base-debian11 AS build-release-stage
 WORKDIR /
 COPY --from=build-stage /network-test /network-test
 COPY --from=build-stage /app/ui/ /ui/
