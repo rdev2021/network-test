@@ -14,6 +14,10 @@
   ```
   docker run -it --rm  -p 9091:9091 ghcr.io/rdev2021/network-test:latest
   ```
+
+  http://localhost:9091/home/ to launch the home page of the application.
+
+
 # Screenshots
  ### Home Page
  ![Screenshot](assets/nt-1.png)
