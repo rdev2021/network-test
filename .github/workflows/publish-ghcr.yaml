@@ -1,13 +1,16 @@
 name: Publish container images to ghcr
 on:
-   push
+  pull_request_target:
+    types:
+      - closed
 jobs:
-   build_and_publish:
-      runs-on: ubuntu-latest
-      steps:
-         - uses: actions/checkout@v3
-         - name: Build & Push image
-           run: |
-              docker login --username rdev2021 --password ${{ secrets.GH_PAT }} ghcr.io
-              docker build . --platform linux/amd64 --tag ghcr.io/rdev2021/network-test:latest
-              docker push ghcr.io/rdev2021/network-test:latest
+  if_merged:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build & Push image
+        run: |
+           docker login --username rdev2021 --password ${{ secrets.GH_PAT }} ghcr.io
+           docker build . --platform linux/amd64 --tag ghcr.io/rdev2021/network-test:latest
+           docker push ghcr.io/rdev2021/network-test:latest
